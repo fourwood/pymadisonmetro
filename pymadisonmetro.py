@@ -12,7 +12,14 @@ def GetRoutes(key):
     url = REQ_URL + req_str
     data = _get_json(url)
 
-    return data
+    routes = None
+    if data['status'] != 0:
+        errorMsg = data['description']
+        raise ValueError(errorMsg)
+    else:
+        routes = data['routes']
+
+    return routes
 
 def GetArrivals(key, stopID=None, routeID=None, vehicleID=None):
     req_str = "getarrivals?key={0}".format(key)
@@ -33,7 +40,7 @@ def GetStops(key, routeID, dest):
     pass
 
 def _get_json(url):
-    request = urllib.request.Request(url)
+    #request = urllib.request.Request(url)
     try:
         response = urllib.request.urlopen(url)
     except urllib.error.URLError as error:
